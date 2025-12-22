@@ -1,5 +1,6 @@
 import {
-    useRef,
+    useEffect,
+    useRef, useState,
     // useState
 } from 'react';
 import { SafeInput } from '../../../../shared-components/SafeInput';
@@ -11,6 +12,9 @@ export function FormSide() {
 
     // const [name, setName] = useState('');
     // const [pass, setPass] = useState<string>('');
+
+    const counterRef= useRef<0|1>(0)
+    const timeOutReft = useRef<number>(0)
 
     const nameInputRef = useRef<HTMLInputElement>(null);
     const passInputRef = useRef<HTMLInputElement>(null);
@@ -26,7 +30,10 @@ export function FormSide() {
     // const isNameValid = name.length >= 3;
     // const isPassValid = pass.length >= 3;
 
+    const [loading,setLoading] = useState<boolean>(false);
+
     const onClickLogin = () => {
+        if (counterRef.current === 1) {alert('Ja tentou login');}
         if (!nameInputRef.current || !passInputRef.current) return;
 
         if (nameInputRef.current.value.length <= 3) {
@@ -39,12 +46,36 @@ export function FormSide() {
             passInputRef.current.focus();
             return;
         }
+        setLoading(true);
 
         console.log({
             name: nameInputRef.current.value,
             pass: passInputRef.current.value,
+            counter: counterRef.current,
         });
+        counterRef.current = 1;
+
+        timeOutReft.current = setTimeout(() => {
+            console.log(counterRef.current)
+            setLoading(false);
+        },2_000)
     };
+
+    function cancelLogin(){
+        if (timeOutReft.current) return;
+        clearTimeout(timeOutReft.current);
+        setLoading(true);
+    }
+
+    useEffect(
+        () => {
+            console.log("Componente Montou")
+            return () => {
+                console.log("Componente Desmontou")
+            }
+        },
+        []
+    );
 
     return (
         <div
@@ -96,7 +127,7 @@ export function FormSide() {
                     <button
                         type="button"
                         // disabled={!isNameValid || !isPassValid}
-                        onClick={onClickLogin}
+                        onClick={loading?cancelLogin:onClickLogin}
                     >
                         Entrar
                     </button>
