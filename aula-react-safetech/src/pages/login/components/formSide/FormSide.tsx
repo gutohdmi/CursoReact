@@ -32,10 +32,12 @@ export function FormSide() {
         if (nameInputRef.current.value.length <= 3) {
             alert('nome muito curto');
             nameInputRef.current.focus();
+            return;
         }
         if (passInputRef.current.value.length <= 3) {
             alert('senha muito curta');
             passInputRef.current.focus();
+            return;
         }
 
         console.log({
