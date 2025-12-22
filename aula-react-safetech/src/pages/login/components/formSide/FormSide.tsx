@@ -1,4 +1,7 @@
-import { useRef, useState } from 'react';
+import {
+    useRef,
+    // useState
+} from 'react';
 import { SafeInput } from '../../../../shared-components/SafeInput';
 
 export function FormSide() {
@@ -7,21 +10,39 @@ export function FormSide() {
     // const nameInputLembrar = 'remember';
 
     // const [name, setName] = useState('');
-    const [pass, setPass] = useState<string>('');
+    // const [pass, setPass] = useState<string>('');
 
     const nameInputRef = useRef<HTMLInputElement>(null);
+    const passInputRef = useRef<HTMLInputElement>(null);
 
     // function onChangeName(newName: string) {
     //     setName(newName);
     // }
 
-    function onChangePass(newPass: string) {
-        setPass(newPass);
-    }
+    // function onChangePass(newPass: string) {
+    //     setPass(newPass);
+    // }
 
     // const isNameValid = name.length >= 3;
-    const isPassValid = pass.length >= 3;
-    console.log('re-render');
+    // const isPassValid = pass.length >= 3;
+
+    const onClickLogin = () => {
+        if (!nameInputRef.current || !passInputRef.current) return;
+
+        if (nameInputRef.current.value.length <= 3) {
+            alert('nome muito curto');
+            nameInputRef.current.focus();
+        }
+        if (passInputRef.current.value.length <= 3) {
+            alert('senha muito curta');
+            passInputRef.current.focus();
+        }
+
+        console.log({
+            name: nameInputRef.current.value,
+            pass: passInputRef.current.value,
+        });
+    };
 
     return (
         <div
@@ -61,24 +82,19 @@ export function FormSide() {
                     />
 
                     <SafeInput
-                        valid={isPassValid}
+                        // valid={isPassValid}
                         labelText="Senha"
                         labelType="password"
                         name={nameInputSenha}
-                        state={pass}
-                        onChange={onChangePass}
+                        // state={pass}
+                        // onChange={onChangePass}
+                        inputRef={passInputRef}
                     />
 
                     <button
                         type="button"
                         // disabled={!isNameValid || !isPassValid}
-                        onClick={() => {
-                            if (!nameInputRef.current) return;
-                            console.log({
-                                name: nameInputRef.current.value,
-                                pass,
-                            });
-                        }}
+                        onClick={onClickLogin}
                     >
                         Entrar
                     </button>
