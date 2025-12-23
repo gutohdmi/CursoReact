@@ -58,6 +58,7 @@ export function FormSide() {
 
         timeOutReft.current = window.setTimeout(() => {
             setLoading(false);
+            window.location.href = '/home';
         }, 2000);
     };
 
