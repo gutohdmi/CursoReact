@@ -8,35 +8,20 @@ import { SafeInput } from '../../../../shared-components/SafeInput';
 export function FormSide() {
     const nameInputNome = 'name';
     const nameInputSenha = 'pass';
-    // const nameInputLembrar = 'remember';
-
-    // const [name, setName] = useState('');
-    // const [pass, setPass] = useState<string>('');
+    const nameInputCheck = 'check';
 
     const counterRef= useRef<0|1>(0)
     const timeOutReft = useRef<number>(0)
 
     const nameInputRef = useRef<HTMLInputElement>(null);
     const passInputRef = useRef<HTMLInputElement>(null);
-
-    // function onChangeName(newName: string) {
-    //     setName(newName);
-    // }
-
-    // function onChangePass(newPass: string) {
-    //     setPass(newPass);
-    // }
-
-    // const isNameValid = name.length >= 3;
-    // const isPassValid = pass.length >= 3;
-    const onPageLoad = () => {
-        nameInputRef.current?.focus();
-    }
+    const checkInputRef = useRef<HTMLInputElement>(null);
+    
+    const [remember, setRemember] = useState(false);
 
     const [loading,setLoading] = useState<boolean>(false);
 
     const onClickLogin = () => {
-        if (counterRef.current === 1) {alert('Ja tentou login');}
         if (!nameInputRef.current || !passInputRef.current) return;
 
         if (nameInputRef.current.value.length <= 3) {
@@ -44,25 +29,34 @@ export function FormSide() {
             nameInputRef.current.focus();
             return;
         }
+
         if (passInputRef.current.value.length <= 3) {
             alert('senha muito curta');
             passInputRef.current.focus();
             return;
         }
-        setLoading(true);
 
-        console.log({
+        if (remember) {
+            localStorage.setItem('login_name', nameInputRef.current!.value);
+            localStorage.setItem('login_remember', 'true');
+        } else {
+            localStorage.removeItem('login_name');
+            localStorage.removeItem('login_remember');
+        }
+        console.log('Logando com', {
             name: nameInputRef.current.value,
             pass: passInputRef.current.value,
-            counter: counterRef.current,
+            remember: checkInputRef.current?.checked,
         });
+
+        setLoading(true);
         counterRef.current = 1;
 
-        timeOutReft.current = setTimeout(() => {
-            console.log(counterRef.current)
+        timeOutReft.current = window.setTimeout(() => {
             setLoading(false);
-        },2_000)
+        }, 2000);
     };
+
 
     function cancelLogin(){
         if (timeOutReft.current) return;
@@ -70,16 +64,21 @@ export function FormSide() {
         setLoading(true);
     }
 
-    useEffect(
-        () => {
-            onPageLoad();
-            console.log("Componente Montou")
-            return () => {
-                console.log("Componente Desmontou")
+
+    useEffect(() => {
+        const savedName = localStorage.getItem('login_name');
+            console.log('savedName', savedName);
+
+            if (savedName && nameInputRef.current) {
+                checkInputRef.current!.checked = true;
+                nameInputRef.current.value = savedName;
+                setRemember(true); 
             }
         },
-        []
-    );
+        []);
+
+
+
 
     return (
         <div
@@ -135,6 +134,18 @@ export function FormSide() {
                     >
                         Entrar
                     </button>
+
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <input
+                            type="checkbox"
+                            name={nameInputCheck}
+                            ref={checkInputRef}
+                            checked={remember}
+                            onChange={(e) => setRemember(e.target.checked)}
+                        />
+                        <label htmlFor={nameInputCheck}>Lembrar de mim</label>
+                    </div>
+
 
                     {/* <SafeInput labelType="checkbox" labelText="Lembrar de mim" labelPosition="right" name={nameInputLembrar} state={remember} /> */}
                 </div>
