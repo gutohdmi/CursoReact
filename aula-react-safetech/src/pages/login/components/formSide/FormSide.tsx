@@ -16,11 +16,15 @@ export function FormSide() {
     const nameInputRef = useRef<HTMLInputElement>(null);
     const passInputRef = useRef<HTMLInputElement>(null);
     const checkInputRef = useRef<HTMLInputElement>(null);
-    
-    const [remember, setRemember] = useState(false);
+
+    const [name, setName] = useState(localStorage.getItem('login_name') || '');
+    const [remember, setRemember] = useState(localStorage.getItem('login_remember') === 'true');
 
     const [loading,setLoading] = useState<boolean>(false);
 
+    function onChangeName(newName: string) {
+        setName(newName);
+    }
     const onClickLogin = () => {
         if (!nameInputRef.current || !passInputRef.current) return;
 
@@ -66,18 +70,8 @@ export function FormSide() {
 
 
     useEffect(() => {
-        const savedName = localStorage.getItem('login_name');
-            console.log('savedName', savedName);
-
-            if (savedName && nameInputRef.current) {
-                checkInputRef.current!.checked = true;
-                nameInputRef.current.value = savedName;
-                setRemember(true); 
-            }
         },
         []);
-
-
 
 
     return (
@@ -112,8 +106,8 @@ export function FormSide() {
                         labelType="text"
                         labelPosition="top"
                         name={nameInputNome}
-                        // state={name}
-                        // onChange={onChangeName}
+                        state={name}
+                        onChange={onChangeName}
                         inputRef={nameInputRef}
                     />
 
