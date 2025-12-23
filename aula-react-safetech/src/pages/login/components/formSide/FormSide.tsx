@@ -29,6 +29,9 @@ export function FormSide() {
 
     // const isNameValid = name.length >= 3;
     // const isPassValid = pass.length >= 3;
+    const onPageLoad = () => {
+        nameInputRef.current?.focus();
+    }
 
     const [loading,setLoading] = useState<boolean>(false);
 
@@ -69,6 +72,7 @@ export function FormSide() {
 
     useEffect(
         () => {
+            onPageLoad();
             console.log("Componente Montou")
             return () => {
                 console.log("Componente Desmontou")
