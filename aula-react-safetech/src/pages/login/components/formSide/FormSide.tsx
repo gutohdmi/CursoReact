@@ -4,6 +4,8 @@ import {
     // useState
 } from 'react';
 import { SafeInput } from '../../../../shared-components/SafeInput';
+import { useNavigate } from 'react-router';
+import { pages } from '../../../../router/pages';
 
 export function FormSide() {
     const nameInputNome = 'name';
@@ -21,6 +23,9 @@ export function FormSide() {
     const [remember, setRemember] = useState(localStorage.getItem('login_remember') === 'true');
 
     const [loading,setLoading] = useState<boolean>(false);
+
+    const navigate = useNavigate();
+
 
     function onChangeName(newName: string) {
         setName(newName);
@@ -58,7 +63,7 @@ export function FormSide() {
 
         timeOutReft.current = window.setTimeout(() => {
             setLoading(false);
-            window.location.href = '/home';
+            navigate(pages.home);
         }, 2000);
     };
 
@@ -127,7 +132,7 @@ export function FormSide() {
                         // disabled={!isNameValid || !isPassValid}
                         onClick={loading?cancelLogin:onClickLogin}
                     >
-                        Entrar
+                        {loading ? 'Entrando...' : 'Entrar'}
                     </button>
 
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

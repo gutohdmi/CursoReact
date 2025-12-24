@@ -1,15 +1,9 @@
-import { useEffect, useState } from 'react';
-import { Home } from './pages/home/home';
-import { Login } from './pages/login/Login';
+import {Router} from './router/Router';
 
 function App() {
-    const [page, setPage] = useState(Login);
-
-    useEffect(() => {
-        if (window.location.pathname === '/home') setPage(Home);
-    });
-
-    return <>{page}</>;
+    return (
+        <Router/>
+    );
 }
 
 export default App;
