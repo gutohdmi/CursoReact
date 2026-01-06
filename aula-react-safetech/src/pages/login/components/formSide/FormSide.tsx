@@ -1,158 +1,182 @@
 import {
     useEffect,
-    useRef, useState,
+    useRef,
+    useState,
     // useState
 } from 'react';
-import { SafeInput } from '../../../../shared-components/SafeInput';
+// import { SafeInput } from '../../../../shared-components/SafeInput';
 import { useNavigate } from 'react-router';
 import { pages } from '../../../../router/pages';
+import { Box, Button, Checkbox, FormControlLabel, Paper, TextField, Typography } from '@mui/material';
 
 export function FormSide() {
     const nameInputNome = 'name';
     const nameInputSenha = 'pass';
-    const nameInputCheck = 'check';
+    const nameInputLembrar = 'remember';
 
-    const counterRef= useRef<0|1>(0)
-    const timeOutReft = useRef<number>(0)
+    const [name, setName] = useState(localStorage.getItem(nameInputNome) || '');
+    // const [pass, setPass] = useState<string>('');
+    const [lembrar, setLembrar] = useState(() => {
+        const savedLembrar = localStorage.getItem(nameInputLembrar) || 'false';
+        const parsedLembrar = JSON.parse(savedLembrar) as boolean;
+        return parsedLembrar;
+    });
 
     const nameInputRef = useRef<HTMLInputElement>(null);
     const passInputRef = useRef<HTMLInputElement>(null);
-    const checkInputRef = useRef<HTMLInputElement>(null);
+    const lembrarInputRef = useRef<HTMLInputElement>(null);
 
-    const [name, setName] = useState(localStorage.getItem('login_name') || '');
-    const [remember, setRemember] = useState(localStorage.getItem('login_remember') === 'true');
-
-    const [loading,setLoading] = useState<boolean>(false);
+    const counterRef = useRef<0 | 1>(0);
+    const timeOutRef = useRef<number>(null);
 
     const navigate = useNavigate();
-
 
     function onChangeName(newName: string) {
         setName(newName);
     }
+
+    // function onChangePass(newPass: string) {
+    //     setPass(newPass);
+    // }
+
+    // const isNameValid = name.length >= 3;
+    // const isPassValid = pass.length >= 3;
+
+    const [loading, setLoading] = useState(false);
+
     const onClickLogin = () => {
         if (!nameInputRef.current || !passInputRef.current) return;
+        // if (counterRef.current > 0) return alert('já está logando');
 
         if (nameInputRef.current.value.length <= 3) {
             alert('nome muito curto');
             nameInputRef.current.focus();
             return;
         }
-
         if (passInputRef.current.value.length <= 3) {
             alert('senha muito curta');
             passInputRef.current.focus();
             return;
         }
+        setLoading(true);
 
-        if (remember) {
-            localStorage.setItem('login_name', nameInputRef.current!.value);
-            localStorage.setItem('login_remember', 'true');
+        if (lembrarInputRef.current?.checked) {
+            localStorage.setItem(nameInputNome, nameInputRef.current.value);
+            localStorage.setItem(nameInputLembrar, JSON.stringify(lembrarInputRef.current.checked));
         } else {
-            localStorage.removeItem('login_name');
-            localStorage.removeItem('login_remember');
+            localStorage.removeItem(nameInputLembrar);
+            localStorage.removeItem(nameInputNome);
         }
-        console.log('Logando com', {
+
+        console.log({
             name: nameInputRef.current.value,
             pass: passInputRef.current.value,
-            remember: checkInputRef.current?.checked,
+            lembrar: !!lembrarInputRef.current?.checked,
+            counter: counterRef.current,
         });
-
-        setLoading(true);
         counterRef.current = 1;
-
-        timeOutReft.current = window.setTimeout(() => {
+        timeOutRef.current = setTimeout(() => {
+            console.log('usuário está logando');
             setLoading(false);
+            // window.location.href = '/home';
             navigate(pages.home);
-        }, 2000);
+        }, 2_000);
     };
+    // function cancelLogin() {
+    //     if (!timeOutRef.current) return;
+    //     clearTimeout(timeOutRef.current);
+    //     setLoading(false);
+    // }
 
+    useEffect(
+        () => {
+            // alguma coisa vai ocorrer aqui dentro
+            // console.log('componente montou');
 
-    function cancelLogin(){
-        if (timeOutReft.current) return;
-        clearTimeout(timeOutReft.current);
-        setLoading(true);
-    }
-
-
-    useEffect(() => {
+            if (nameInputRef.current) {
+                nameInputRef.current.focus();
+            } // setLoading(false);
+            return () => {
+                // o que está aqui dentro vai ocorrer no 'unmount' do componente
+                // console.log('componente DESmontou');
+            };
         },
-        []);
-
+        //  quando algo do array de dependencias abaixo for modificado
+        []
+    );
 
     return (
-        <div
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100%',
-                flex: 1,
-            }}
-        >
-            <div
-                style={{
-                    border: '1px solid navy',
-                    backgroundColor: 'lightblue',
-                    borderRadius: 16,
-                    padding: 16,
+        <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="100%" flex={1}>
+            <Paper
+                sx={{
+                    borderRadius: 2,
+                    padding: 2,
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    width: 300,
+                    width: '300px',
                 }}
+                elevation={8}
             >
-                <h1>Login</h1>
+                <Typography variant="h4" gutterBottom>
+                    Login
+                </Typography>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 16, width: '100%' }}>
-                    <SafeInput
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
+                    <TextField
                         // valid={isNameValid}
-                        labelText="Nome"
-                        labelType="text"
-                        labelPosition="top"
+                        // labelText="Nome"
+                        label="Nome"
+                        // labelType="text"
+                        // labelPosition="top"
                         name={nameInputNome}
-                        state={name}
-                        onChange={onChangeName}
+                        // state={name}
+                        value={name}
+                        onChange={({ target: { value } }) => onChangeName(value)}
                         inputRef={nameInputRef}
                     />
 
-                    <SafeInput
+                    <TextField
                         // valid={isPassValid}
-                        labelText="Senha"
-                        labelType="password"
+                        label="Senha"
+                        // labelType="password"
+                        type="password"
                         name={nameInputSenha}
                         // state={pass}
                         // onChange={onChangePass}
                         inputRef={passInputRef}
                     />
 
-                    <button
+                    <Button
                         type="button"
                         // disabled={!isNameValid || !isPassValid}
-                        onClick={loading?cancelLogin:onClickLogin}
+                        // disabled={loading}
+                        onClick={onClickLogin}
+                        loading={loading}
                     >
-                        {loading ? 'Entrando...' : 'Entrar'}
-                    </button>
-
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <input
-                            type="checkbox"
-                            name={nameInputCheck}
-                            ref={checkInputRef}
-                            checked={remember}
-                            onChange={(e) => setRemember(e.target.checked)}
-                        />
-                        <label htmlFor={nameInputCheck}>Lembrar de mim</label>
-                    </div>
-
+                        {'Entrar'}
+                    </Button>
 
                     {/* <SafeInput labelType="checkbox" labelText="Lembrar de mim" labelPosition="right" name={nameInputLembrar} state={remember} /> */}
-                </div>
-                <p style={{ textAlign: 'center' }}>
+                    <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {/* <input
+                            type="checkbox"
+                            name={nameInputLembrar}
+                            ref={lembrarInputRef}
+                            // checked={lembrar}
+                            onChange={() => setLembrar((current) => !current)}
+                        /> */}
+                        <FormControlLabel
+                            control={<Checkbox checked={lembrar} onChange={() => setLembrar((current) => !current)} />}
+                            label="Lembrar de mim"
+                        />
+                        {/* <Typography variant="caption">Lembrar de mim</Typography> */}
+                    </Box>
+                </Box>
+                <Typography style={{ textAlign: 'center' }}>
                     Não possui conta? <a href="#">Criar conta</a>
-                </p>
-            </div>
-        </div>
+                </Typography>
+            </Paper>
+        </Box>
     );
 }
