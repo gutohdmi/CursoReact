@@ -1,11 +1,11 @@
 import { ThemeProvider } from '@emotion/react';
 import {Router} from './router/Router';
-import theme from './theme/theme';
+import {themeLight} from './theme/theme';
 
 function App() {
-    console.log({theme});
+    console.log({themeLight});
     return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={themeLight}>
         <Router/>
     </ThemeProvider>
     );
