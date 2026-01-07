@@ -1,21 +1,17 @@
-import {
-    useEffect,
-    useRef,
-    useState,
-    // useState
-} from 'react';
-// import { SafeInput } from '../../../../shared-components/SafeInput';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { pages } from '../../../../router/pages';
-import { Box, Button, Checkbox, FormControlLabel, Paper, TextField, Typography } from '@mui/material';
+import { Box, Button, Checkbox, FormControlLabel, IconButton, InputAdornment, Paper, TextField, Typography } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 export function FormSide() {
     const nameInputNome = 'name';
     const nameInputSenha = 'pass';
     const nameInputLembrar = 'remember';
 
+    const [visibilidade, setVisibilidade] = useState(false);
     const [name, setName] = useState(localStorage.getItem(nameInputNome) || '');
-    // const [pass, setPass] = useState<string>('');
     const [lembrar, setLembrar] = useState(() => {
         const savedLembrar = localStorage.getItem(nameInputLembrar) || 'false';
         const parsedLembrar = JSON.parse(savedLembrar) as boolean;
@@ -35,18 +31,10 @@ export function FormSide() {
         setName(newName);
     }
 
-    // function onChangePass(newPass: string) {
-    //     setPass(newPass);
-    // }
-
-    // const isNameValid = name.length >= 3;
-    // const isPassValid = pass.length >= 3;
-
     const [loading, setLoading] = useState(false);
 
     const onClickLogin = () => {
         if (!nameInputRef.current || !passInputRef.current) return;
-        // if (counterRef.current > 0) return alert('já está logando');
 
         if (nameInputRef.current.value.length <= 3) {
             alert('nome muito curto');
@@ -78,27 +66,19 @@ export function FormSide() {
         timeOutRef.current = setTimeout(() => {
             console.log('usuário está logando');
             setLoading(false);
-            // window.location.href = '/home';
             navigate(pages.home);
         }, 2_000);
     };
-    // function cancelLogin() {
-    //     if (!timeOutRef.current) return;
-    //     clearTimeout(timeOutRef.current);
-    //     setLoading(false);
-    // }
 
     useEffect(
         () => {
             // alguma coisa vai ocorrer aqui dentro
-            // console.log('componente montou');
 
             if (nameInputRef.current) {
                 nameInputRef.current.focus();
-            } // setLoading(false);
+            }
             return () => {
                 // o que está aqui dentro vai ocorrer no 'unmount' do componente
-                // console.log('componente DESmontou');
             };
         },
         //  quando algo do array de dependencias abaixo for modificado
@@ -124,53 +104,41 @@ export function FormSide() {
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
                     <TextField
-                        // valid={isNameValid}
-                        // labelText="Nome"
                         label="Nome"
-                        // labelType="text"
-                        // labelPosition="top"
                         name={nameInputNome}
-                        // state={name}
                         value={name}
                         onChange={({ target: { value } }) => onChangeName(value)}
                         inputRef={nameInputRef}
                     />
 
                     <TextField
-                        // valid={isPassValid}
                         label="Senha"
-                        // labelType="password"
-                        type="password"
+                        type={visibilidade ? 'text' : 'password'}
                         name={nameInputSenha}
-                        // state={pass}
-                        // onChange={onChangePass}
                         inputRef={passInputRef}
+                        slotProps={{
+                            input: {
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton onClick={() => setVisibilidade((c) => !c)}>
+                                            {visibilidade ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            },
+                        }}
                     />
 
-                    <Button
-                        type="button"
-                        // disabled={!isNameValid || !isPassValid}
-                        // disabled={loading}
-                        onClick={onClickLogin}
-                        loading={loading}
-                    >
+                    <Button type="button" onClick={onClickLogin} loading={loading}>
                         {'Entrar'}
                     </Button>
 
-                    {/* <SafeInput labelType="checkbox" labelText="Lembrar de mim" labelPosition="right" name={nameInputLembrar} state={remember} /> */}
                     <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        {/* <input
-                            type="checkbox"
-                            name={nameInputLembrar}
-                            ref={lembrarInputRef}
-                            // checked={lembrar}
-                            onChange={() => setLembrar((current) => !current)}
-                        /> */}
                         <FormControlLabel
                             control={<Checkbox checked={lembrar} onChange={() => setLembrar((current) => !current)} />}
                             label="Lembrar de mim"
+                            inputRef={lembrarInputRef}
                         />
-                        {/* <Typography variant="caption">Lembrar de mim</Typography> */}
                     </Box>
                 </Box>
                 <Typography style={{ textAlign: 'center' }}>

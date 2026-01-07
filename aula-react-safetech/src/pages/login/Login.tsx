@@ -3,6 +3,7 @@ import { FormSide } from './components/formSide/FormSide';
 import { LogoSide } from './components/logoSide/LogoSide';
 
 export function Login() {
+    // aqui pode usar typescript
     const {
         palette: { background },
     } = useTheme();

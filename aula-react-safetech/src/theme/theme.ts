@@ -28,6 +28,20 @@ const themeDark = createTheme({
         },
         mode: 'dark',
     },
+    typography: { fontFamily: 'Segoe UI' },
+    components: {
+        MuiButton: {
+            defaultProps: {
+                color: 'secondary',
+                variant: 'contained',
+            },
+            styleOverrides: {
+                root: {
+                    textTransform: 'none',
+                },
+            },
+        },
+    },
 });
 
 export { themeLight, themeDark };
