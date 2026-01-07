@@ -1,12 +1,13 @@
 import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useState, type MouseEvent } from 'react';
 import { pages } from '../router/pages';
 
 export function SafeAppBar() {
     const name = localStorage.getItem('name') || '🤠';
     const navigate = useNavigate();
+    const { pathname: currentPage } = useLocation();
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -23,6 +24,7 @@ export function SafeAppBar() {
         handleClose();
         navigate(pages.login);
     };
+
     return (
         <AppBar position="static">
             <Toolbar>
@@ -40,6 +42,8 @@ export function SafeAppBar() {
                         },
                     }}
                 >
+                    {currentPage !== pages.home && <MenuItem onClick={() => navigate(pages.home)}>Home</MenuItem>}
+                    {currentPage !== pages.products && <MenuItem onClick={() => navigate(pages.products)}>Produtos</MenuItem>}
                     <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
                 <Typography variant="h6" color="inherit" component="div">
