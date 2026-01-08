@@ -6,9 +6,13 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material';
 import type { Product } from '../mocks/product/product';
+import { pages } from '../router/pages';
+import { useNavigate } from 'react-router';
 
-export function SafeCard({ category, description, image, price, title }: Product) {
+export function SafeCard({ category, description, image, price, title, id }: Product) {
     const { shadows } = useTheme();
+    const navigate = useNavigate();
+
     return (
         <Card
             sx={{ width: 280, my: 1, ':hover': { boxShadow: shadows[4] }, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
@@ -30,7 +34,7 @@ export function SafeCard({ category, description, image, price, title }: Product
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button fullWidth>Comprar</Button>
+                <Button fullWidth onClick={() => navigate(pages.products + '/' + id)}>Comprar</Button>
             </CardActions>
         </Card>
     );

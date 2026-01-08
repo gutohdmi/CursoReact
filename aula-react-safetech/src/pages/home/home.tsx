@@ -1,9 +1,9 @@
 import productList from '../../mocks/product/products_1000.json';
 import { Box, Button, Menu, MenuItem, Paper } from '@mui/material';
 import { useState, type MouseEvent } from 'react';
-import { SafeCard } from './components/ProductCard';
 import type { Product } from '../../mocks/product/product';
 import { SafeAppBar } from '../../shared-components/SafeAppBar';
+import { SafeCard } from '../../shared-components/SafeCard';
 
 export function Home() {
     const [anchorElSorting, setAnchorElSorting] = useState<null | HTMLElement>(null);

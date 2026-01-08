@@ -4,6 +4,7 @@ import { Login } from '../pages/login/Login';
 import { Home } from '../pages/home/home';
 import { NotFound } from '../pages/notFound/NotFound';
 import { Products } from '../pages/products/Products';
+import { ProductDetail } from '../pages/productDetail/ProductDetail';
 import { safeApi } from '../services/api';
 
 function isAuthenticated(): boolean {
@@ -31,10 +32,12 @@ export function Router() {
 
             {/* Camada privada */}
             <Route element={<PrivateLayer />}>
+                <Route path={pages.products + '/:id'} 
+  element={<ProductDetail />} />
                 <Route path={pages.home} Component={Home} />
                 <Route path={pages.products} Component={Products} />
                 <Route path={'*'} Component={NotFound} />
-            </Route>
+            </Route>    
         </Routes>
     );
 }
