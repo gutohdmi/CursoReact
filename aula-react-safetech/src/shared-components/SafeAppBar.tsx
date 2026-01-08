@@ -3,6 +3,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useLocation, useNavigate } from 'react-router';
 import { useState, type MouseEvent } from 'react';
 import { pages } from '../router/pages';
+import { clearToken } from '../services/api';
 
 export function SafeAppBar() {
     const name = localStorage.getItem('name') || '🤠';
@@ -22,6 +23,7 @@ export function SafeAppBar() {
 
     const handleLogout = () => {
         handleClose();
+        clearToken();
         navigate(pages.login);
     };
 

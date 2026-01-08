@@ -71,10 +71,17 @@ export function FormSide() {
         // }, 2_000);
 
         try {
-            await safeApi.post('auth/login', {
+            const response = await safeApi.post<{ token: string }>('auth/login', {
                 username: nameInputRef.current.value,
                 password: passInputRef.current.value,
             });
+
+            const loginResponseToken = response.data.token;
+
+            safeApi.defaults.headers.common.Authorization = `Bearer ${loginResponseToken}`;
+            window.localStorage.setItem('auth:token', loginResponseToken);
+            console.log(response.data.token);
+
             navigate(pages.home);
         } catch (error) {
             console.log({ error });

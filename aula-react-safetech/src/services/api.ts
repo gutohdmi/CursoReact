@@ -1,5 +1,11 @@
 import axios from 'axios';
 
-export const safeApi = axios.create({
+const safeApi = axios.create({
     baseURL: 'https://fakestoreapi.com',
 });
+
+function clearToken() {
+    localStorage.removeItem('auth:token');
+}
+
+export { safeApi, clearToken };
