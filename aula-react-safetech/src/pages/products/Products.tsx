@@ -28,7 +28,6 @@ export function Products() {
 
     return (
         <Box display={'flex'} flexDirection={'column'} height={'100%'}>
-            <SafeAppBar />
             <Box display={'flex'} gap={2} padding={2} flex={1}>
                 <Paper sx={{ flex: 1, display: 'flex', p: 1, flexWrap: 'wrap', gap: 1 }} elevation={3}>
                     {!loading ? (

@@ -45,7 +45,6 @@ export function ProductDetail() {
 
   return (
     <>
-      <SafeAppBar />
 
       <Container maxWidth="md" sx={{ py: 6 }}>
         <Paper sx={{ p: 4, borderRadius: 3, boxShadow: 4 }}>

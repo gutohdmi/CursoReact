@@ -3,16 +3,6 @@ export type Product = {
     title: string;
     price: number;
     description: string;
-    category:
-        | 'Eletrônicos'
-        | 'Casa & Cozinha'
-        | 'Escritório'
-        | 'Esportes'
-        | 'Moda'
-        | 'Brinquedos'
-        | 'Automotivo'
-        | 'Saúde & Beleza'
-        | 'Livros'
-        | 'Pet';
+    category: string;
     image: string;
 };

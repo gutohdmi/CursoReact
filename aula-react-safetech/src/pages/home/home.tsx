@@ -1,8 +1,6 @@
 import productList from '../../mocks/product/products_1000.json';
 import { Box, Button, Menu, MenuItem, Paper } from '@mui/material';
 import { useState, type MouseEvent } from 'react';
-import type { Product } from '../../mocks/product/product';
-import { SafeAppBar } from '../../shared-components/SafeAppBar';
 import { SafeCard } from '../../shared-components/SafeCard';
 
 export function Home() {
@@ -19,8 +17,7 @@ export function Home() {
 
     const [filter, setFilter] = useState<'price' | 'title'>('price');
     return (
-        <Box display={'flex'} flexDirection={'column'} height={'100%'}>
-            <SafeAppBar />
+        <Box display={'flex'} flexDirection={'column'} flex={1}>
             <Box display={'flex'} gap={2} padding={2} flex={1}>
                 <Paper sx={{ width: '200px', display: 'flex', flexDirection: 'column', p: 1 }} elevation={3}>
                     <Button onClick={handleClickSorting}>Sorting</Button>
@@ -69,7 +66,7 @@ export function Home() {
                         })
                         .filter((p, i) => i <= 20)
                         .map((p) => (
-                            <SafeCard {...(p as Product)} key={p.id} />
+                            <SafeCard {...p} key={p.id} />
                         ))}
                 </Paper>
             </Box>
