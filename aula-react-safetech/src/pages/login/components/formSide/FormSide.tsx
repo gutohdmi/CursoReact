@@ -5,6 +5,8 @@ import { Box, Button, Checkbox, FormControlLabel, IconButton, InputAdornment, Pa
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { safeApi } from '../../../../services/api';
+import { useDispatch, useSelector } from 'react-redux';
+import { setNome } from '../../../../store/userSlice';
 
 export function FormSide() {
     const nameInputNome = 'name';
@@ -28,11 +30,18 @@ export function FormSide() {
 
     const navigate = useNavigate();
 
+    const dispatch = useDispatch();
+
     function onChangeName(newName: string) {
         setName(newName);
     }
 
     const [loading, setLoading] = useState(false);
+
+    const handleNameChange = () => {
+        dispatch(setNome(name)); 
+        setName('');
+    };
 
     const onClickLogin = async () => {
         if (!nameInputRef.current || !passInputRef.current) return;
@@ -50,9 +59,11 @@ export function FormSide() {
         setLoading(true);
 
         if (lembrarInputRef.current?.checked) {
+            handleNameChange();
             localStorage.setItem(nameInputNome, nameInputRef.current.value);
             localStorage.setItem(nameInputLembrar, JSON.stringify(lembrarInputRef.current.checked));
         } else {
+            handleNameChange();
             localStorage.removeItem(nameInputLembrar);
             localStorage.removeItem(nameInputNome);
         }
@@ -64,11 +75,6 @@ export function FormSide() {
             counter: counterRef.current,
         });
         counterRef.current = 1;
-        // timeOutRef.current = setTimeout(() => {
-        //     console.log('usuário está logando');
-        //     setLoading(false);
-        //     navigate(pages.home);
-        // }, 2_000);
 
         try {
             const response = await safeApi.post<{ token: string }>('auth/login', {

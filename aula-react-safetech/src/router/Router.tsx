@@ -7,12 +7,6 @@ import { Products } from '../pages/products/Products';
 import { safeApi } from '../services/api';
 import { ProductDetail } from '../pages/productDetail/ProductDetail';
 import { SafeAppBar } from '../shared-components/SafeAppBar';
-import type { Theme } from '@mui/material';
-
-type Props = {
-    setThemeMode: React.Dispatch<React.SetStateAction<Theme>>;
-    themeMode: Theme;
-};
 
 function isAuthenticated(): boolean {
     const token = localStorage.getItem('auth:token');
@@ -25,10 +19,10 @@ function PublicLayer() {
     return isAuthenticated() ? <Navigate to={pages.home} replace /> : <Outlet />;
 }
 
-function PrivateLayer({ setThemeMode, themeMode }: Props) {
+function PrivateLayer() {
     return isAuthenticated() ? (
         <>
-            <SafeAppBar setThemeMode={setThemeMode} themeMode={themeMode} />
+            <SafeAppBar />
             <Outlet />
         </>
     ) : (
@@ -36,7 +30,7 @@ function PrivateLayer({ setThemeMode, themeMode }: Props) {
     );
 }
 
-export function Router({ setThemeMode, themeMode }: Props) {
+export function Router() {
     return (
         <Routes>
             {/* Camada pública */}
@@ -45,7 +39,7 @@ export function Router({ setThemeMode, themeMode }: Props) {
             </Route>
 
             {/* Camada privada */}
-            <Route element={<PrivateLayer setThemeMode={setThemeMode} themeMode={themeMode} />}>
+            <Route element={<PrivateLayer />}>
                 <Route path={pages.home} Component={Home} />
                 <Route path={pages.products} Component={Products} />
                 <Route path={pages.products + '/:id'} Component={ProductDetail} />

@@ -1,23 +1,25 @@
-import { AppBar, Box, Button, FormControlLabel, IconButton, Menu, MenuItem, Switch, Toolbar, Typography, type Theme } from '@mui/material';
+import { AppBar, Box, Button, FormControlLabel, IconButton, Menu, MenuItem, Switch, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useLocation, useNavigate } from 'react-router';
 import { useState, type MouseEvent } from 'react';
 import { pages } from '../router/pages';
 import { clearToken } from '../services/api';
-import { themeDark, themeLight } from '../theme/theme';
 import { SafeModal } from './SafeModal';
+import { useAppDispatch, useAppSelector } from '../store/store';
+import { setThemeMode } from '../store/configuracoesSlice';
 
-type Props = {
-    setThemeMode: React.Dispatch<React.SetStateAction<Theme>>;
-    themeMode: Theme;
-};
-
-export function SafeAppBar({ setThemeMode, themeMode }: Props) {
-    const name = localStorage.getItem('name') || '🤠';
+export function SafeAppBar() {
+    const name = useAppSelector(({ user }) => user?.user) || '🤠';
     const navigate = useNavigate();
     const { pathname: currentPage } = useLocation();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const themeMode = useAppSelector(({ configuracoes }) => configuracoes.themeMode);
+    const dispatch = useAppDispatch();
+
+    function changeTheme() {
+        dispatch(setThemeMode(themeMode === 'light' ? 'dark' : 'light'));
+    }
 
     const [openModal, setOpenModal] = useState(false);
     const handleOpenModal = () => setOpenModal(true);
@@ -72,13 +74,7 @@ export function SafeAppBar({ setThemeMode, themeMode }: Props) {
                         <Box display={'flex'} alignItems={'flex-end'}>
                             <Typography gutterBottom>Dark</Typography>
                             <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={themeMode.palette.mode === 'light'}
-                                        onChange={(e) => setThemeMode(e.target.checked ? themeLight : themeDark)}
-                                        color="info"
-                                    />
-                                }
+                                control={<Switch checked={themeMode === 'light'} onChange={changeTheme} color="info" />}
                                 label="Modo"
                                 labelPlacement="top"
                             />
